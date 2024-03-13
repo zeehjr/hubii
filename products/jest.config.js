@@ -1,8 +1,20 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import hq from 'alias-hq';
+
+export default {
   transform: {
-    '^.+\\.tsx?$': 'esbuild-jest',
+    '^.+\\.tsx?$': [
+      'esbuild-jest',
+      {
+        sourcemap: true,
+        loaders: {
+          '.spec.ts': 'tsx',
+        },
+      },
+    ],
   },
-  preset: 'ts-jest',
   testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '/dist/', '/types/'],
+
+  // Resolves tsconfig paths for jest
+  moduleNameMapper: hq.get('jest'),
 };

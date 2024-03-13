@@ -1,5 +1,10 @@
-import axios from 'axios';
+import { PrismaClient } from '@prisma/client';
+import { createApp } from './app';
 
-const res = await axios.get('https://www.google.com.br');
+const PORT = process.env.PORT ?? '8082';
 
-console.log(res.data);
+const app = createApp({ prismaClient: new PrismaClient() });
+
+app.listen(PORT, () => {
+  console.info(`Products service is running at http://localhost:${PORT}`);
+});
