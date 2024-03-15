@@ -17,7 +17,7 @@ describe('Orders Service', () => {
 
   describe('OrdersService.list', () => {
     const orderOne: Order = {
-      id: '1',
+      id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
       shopifyId: null,
@@ -31,7 +31,7 @@ describe('Orders Service', () => {
       expect(data).toBeDefined();
       expect(data).toHaveLength(1);
       expect(data[0].id).toBeDefined();
-      expect(data[0].id).toBe('1');
+      expect(data[0].id).toBe(1);
     });
 
     afterEach(() => {
@@ -41,33 +41,49 @@ describe('Orders Service', () => {
 
   describe('OrdersService.create', () => {
     const orderInputWith3Products = {
-      productsIds: ['1', '2', '3'],
+      products: [
+        {
+          id: 1,
+          price: '10',
+          quantity: 1,
+        },
+        {
+          id: 2,
+          price: '20',
+          quantity: 2,
+        },
+        {
+          id: 3,
+          price: '30',
+          quantity: 3,
+        },
+      ],
     } satisfies CreateOrderInput;
 
     const threeProducts: Product[] = [
       {
-        id: '1',
+        id: 1,
         title: 'Product 1',
         description: 'Product 1',
-        price: 10,
+        price: '10',
       },
       {
-        id: '2',
+        id: 2,
         title: 'Product 2',
         description: 'Product 2',
-        price: 12,
+        price: '12',
       },
       {
-        id: '3',
+        id: 3,
         title: 'Product 3',
         description: 'Product 3',
-        price: 13,
+        price: '13',
       },
     ];
 
     test('should create an order and return it', async () => {
       prismaMock.order.create.mockResolvedValue({
-        id: '1',
+        id: 1,
         createdAt: new Date(),
         shopifyId: null,
         updatedAt: new Date(),
@@ -79,14 +95,14 @@ describe('Orders Service', () => {
 
       expect(result).toBeDefined();
       expect(result.id).toBeDefined();
-      expect(result.id).toBe('1');
+      expect(result.id).toBe(1);
     });
 
     test('should throw a ShopifyIdConflictError when an order with the same shopifyId already exists', () => {
-      const shopifyId = 1;
+      const shopifyId = '1';
 
       prismaMock.order.findFirst.mockResolvedValue({
-        id: '1',
+        id: 1,
         shopifyId: shopifyId,
         createdAt: new Date(),
         updatedAt: new Date(),
