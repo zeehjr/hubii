@@ -18,10 +18,10 @@ model SyncTrackerData {
   id                       String    @id @default(cuid())
   //
   lastSyncedShopifyOrderId String?   @map("last_synced_shopify_order_id")
-  lastSyncedShopifyOrderAt DateTime?
+  lastSyncedShopifyOrderAt DateTime? @map("last_synced_shopify_order_at")
   //
   lastSyncedProductId      Int?      @map("last_synced_product_id")
-  lastSyncedProductAt      DateTime?
+  lastSyncedProductAt      DateTime? @map("last_synced_product_at")
   //
   createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt                DateTime  @updatedAt @map("updated_at")

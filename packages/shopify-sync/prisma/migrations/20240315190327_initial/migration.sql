@@ -5,9 +5,9 @@ CREATE TYPE "LogType" AS ENUM ('info', 'warning', 'error');
 CREATE TABLE "SyncTrackerData" (
     "id" TEXT NOT NULL,
     "last_synced_shopify_order_id" TEXT,
-    "lastSyncedShopifyOrderAt" TIMESTAMP(3),
+    "last_synced_shopify_order_at" TIMESTAMP(3),
     "last_synced_product_id" INTEGER,
-    "lastSyncedProductAt" TIMESTAMP(3),
+    "last_synced_product_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

@@ -32,7 +32,7 @@ model OrderProduct {
   quantity  Int
   //
   orderId   Int
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   //
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
