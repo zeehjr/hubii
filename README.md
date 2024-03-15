@@ -8,7 +8,7 @@ Before running this application, ensure you have the following prerequisites ins
 - Docker Compose
 - Node.js v20 (recommended), as the project uses ECMAScript modules (`type: module`)
 - Package manager: Npm, Yarn, or PNPM
-- Shopify account with store and admin API access token
+- Shopify account with store and [admin API access token](https://help.plytix.com/en/getting-api-credentials-from-your-shopify-store)
 
 ### Getting Started
 
