@@ -4,7 +4,7 @@ import { ProductsService } from '../../src/services/productsService';
 
 const productMock = {
   id: 1,
-  shopifyId: null,
+  shopifyId: '1',
   title: '1',
   description: '1',
   price: new Prisma.Decimal(10),
@@ -34,26 +34,70 @@ describe('ProductsService', () => {
   describe('ProductsService.list', () => {
     test('should return the products returned from database', async () => {
       prismaMock.product.findMany.calledWith().mockResolvedValue([productMock]);
-      const result = await productsService.list([], 'none');
+      const result = await productsService.list();
 
       expect(result).toBeDefined();
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(productMock.id);
     });
 
-    test('should use the ids list to filter products', async () => {
-      const ids = ['1'];
+    test('should filter by ids correctly', async () => {
+      const ids = [1];
 
       prismaMock.product.findMany
         .calledWith(anyObject())
         .mockResolvedValue([productMock]);
 
-      const result = await productsService.list(ids, 'ids');
+      const result = await productsService.list({ filter: { ids } });
 
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {
           id: {
-            in: ids.map(Number),
+            in: ids,
+          },
+        },
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBe(productMock);
+    });
+
+    test('should filter by shopifyIds correctly', async () => {
+      const shopifyIds = ['1'];
+
+      prismaMock.product.findMany
+        .calledWith(anyObject())
+        .mockResolvedValue([productMock]);
+
+      const result = await productsService.list({ filter: { shopifyIds } });
+
+      expect(prismaMock.product.findMany).toHaveBeenCalledWith({
+        where: {
+          shopifyId: {
+            in: shopifyIds,
+          },
+        },
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBe(productMock);
+    });
+
+    test('should filter by sinceId correctly', async () => {
+      const sinceId = 1;
+
+      prismaMock.product.findMany
+        .calledWith(anyObject())
+        .mockResolvedValue([productMock]);
+
+      const result = await productsService.list({ filter: { sinceId } });
+
+      expect(prismaMock.product.findMany).toHaveBeenCalledWith({
+        where: {
+          id: {
+            gt: sinceId,
           },
         },
       });

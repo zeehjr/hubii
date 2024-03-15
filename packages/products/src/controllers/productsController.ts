@@ -2,7 +2,10 @@ import { Handler } from 'express';
 import { ProductsService } from '../services/productsService';
 import { UpdateProductInputSchema } from '../validation/updateProductInput';
 import { CreateProductInputSchema } from '../validation/createProductInput';
-import { IdsListSchema } from '../validation/idsList';
+import {
+  ListProductsFilter,
+  ListProductsFilterSchema,
+} from '../validation/listProductsFilterSchema';
 
 // TODO: Add error handling
 
@@ -18,30 +21,9 @@ export class ProductsController {
   };
 
   list: Handler = async (req, res) => {
-    const ids = IdsListSchema.parse(req.query.ids);
-    const shopifyIds = IdsListSchema.parse(req.query.shopifyIds);
+    const filter = ListProductsFilterSchema.parse(req.query);
 
-    if (ids && shopifyIds) {
-      return res.status(400).json({
-        message: `You can't specify ids and shopifyIds at the same time. You have to either pass ids or shopifyIds.`,
-      });
-    }
-
-    let idsList: string[] = [];
-
-    let filterBy: 'ids' | 'shopifyIds' | 'none' = 'none';
-
-    if (ids) {
-      idsList = Array.isArray(ids) ? ids : ids.split(',');
-      filterBy = 'ids';
-    }
-
-    if (shopifyIds) {
-      idsList = Array.isArray(shopifyIds) ? shopifyIds : shopifyIds.split(',');
-      filterBy = 'shopifyIds';
-    }
-
-    const products = await this.productsService.list(idsList, filterBy);
+    const products = await this.productsService.list({ filter });
 
     return res.json({
       data: products,

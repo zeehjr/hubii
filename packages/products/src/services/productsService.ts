@@ -1,5 +1,6 @@
 import { PrismaClient } from '../../prisma/client';
 import { CreateProductInput } from '../validation/createProductInput';
+import { ListProductsFilter } from '../validation/listProductsFilterSchema';
 import { UpdateProductInput } from '../validation/updateProductInput';
 
 export class ProductsService {
@@ -11,22 +12,32 @@ export class ProductsService {
     });
   }
 
-  async list(ids: string[], filterBy: 'none' | 'ids' | 'shopifyIds') {
-    if (ids.length > 0 && filterBy === 'ids') {
+  async list({ filter }: { filter?: ListProductsFilter } = { filter: {} }) {
+    if (filter?.ids) {
       return this.prisma.product.findMany({
         where: {
           id: {
-            in: ids.map(Number),
+            in: filter.ids,
           },
         },
       });
     }
 
-    if (ids.length > 0 && filterBy === 'shopifyIds') {
+    if (filter?.shopifyIds) {
       return this.prisma.product.findMany({
         where: {
           shopifyId: {
-            in: ids,
+            in: filter.shopifyIds,
+          },
+        },
+      });
+    }
+
+    if (filter?.sinceId) {
+      return this.prisma.product.findMany({
+        where: {
+          id: {
+            gt: filter.sinceId,
           },
         },
       });
