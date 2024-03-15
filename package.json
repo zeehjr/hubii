@@ -1,0 +1,13 @@
+{
+  "name": "shopify-microservices",
+  "engines": {
+    "node": ">=16.13",
+    "pnpm": ">=8.6.7 <9"
+  },
+  "scripts": {
+    "dev": "pnpm run --parallel /^dev$/",
+    "prisma:generate": "pnpm run --parallel /^prisma:generate$/",
+    "prisma:migrate": "pnpm run --parallel /^prisma:migrate$/",
+    "test": "pnpm run --parallel /^test$/"
+  }
+}
