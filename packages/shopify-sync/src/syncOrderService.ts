@@ -40,6 +40,8 @@ export class SyncOrderService {
       if (!newOrder) return;
     }
 
+    let lastSuccessfulResult = result;
+
     // TODO: move to a queue to avoid hitting rate limit
     while (result.data.pageInfo.next) {
       result = await this.shopifyApi.getOrders({
@@ -53,14 +55,23 @@ export class SyncOrderService {
           'error',
           `There was an error while trying to get orders from ShopifyApi: ${result.error}`
         );
-        return;
+
+        break;
       }
 
       for (const order of result.data.orders) {
         const newOrder = await this.createOrder(order);
 
-        if (!newOrder) return;
+        if (!newOrder) break;
       }
+
+      lastSuccessfulResult = result;
+    }
+
+    const lastOrder = lastSuccessfulResult.data.orders.at(-1);
+
+    if (lastOrder) {
+      await this.syncDataService.setLastSyncedOrder(lastOrder.id);
     }
   }
 

@@ -20,4 +20,18 @@ export class SyncDataService {
 
     return data;
   }
+
+  async setLastSyncedOrder(shopifyOrderId: string) {
+    const data = await this.getData();
+
+    await this.prisma.syncTrackerData.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        lastSyncedShopifyOrderAt: new Date(),
+        lastSyncedShopifyOrderId: shopifyOrderId,
+      },
+    });
+  }
 }
