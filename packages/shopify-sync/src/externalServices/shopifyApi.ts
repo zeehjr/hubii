@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Result } from 'utils';
 import { z } from 'zod';
 
 const ProductSchema = z.object({
@@ -47,7 +48,7 @@ export class ShopifyApi {
     status: ShopifyOrderStatus;
     pageInfo?: string;
     sinceId?: string;
-  }): Promise<ShopifyApiResponse<GetOrdersResponse, Error>> {
+  }): Promise<Result<GetOrdersResponse, Error>> {
     let url = '';
 
     if (pageInfo) {
@@ -69,37 +70,21 @@ export class ShopifyApi {
 
       const data = GetOrdersResponseSchema.parse(response.data);
 
-      return {
-        status: 'success',
-        data: {
-          orders: data.orders,
-          pageInfo: extractPageInfo(response.headers.link),
-        },
-      };
+      return Result.ok({
+        orders: data.orders,
+        pageInfo: extractPageInfo(response.headers.link),
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);
       }
 
-      return {
-        status: 'error',
-        error: error as Error,
-      };
+      return Result.error(error as Error);
     }
   }
 }
 
 type ShopifyOrderStatus = 'open' | 'closed' | 'cancelled' | 'any';
-
-export type ShopifyApiResponse<T, E> =
-  | {
-      status: 'success';
-      data: T;
-    }
-  | {
-      status: 'error';
-      error: E;
-    };
 
 type GetOrdersResponse = { orders: Order[]; pageInfo: PageInfo };
 

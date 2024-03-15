@@ -1,4 +1,4 @@
-import { LogType, PrismaClient } from '../prisma/client';
+import { LogType, PrismaClient } from '../../prisma/client';
 
 export class LogService {
   constructor(private readonly prisma: PrismaClient) {}

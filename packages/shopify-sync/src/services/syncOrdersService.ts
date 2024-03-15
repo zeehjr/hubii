@@ -1,13 +1,13 @@
-import { BadRequestError } from './errors/BadRequestError';
-import { DivergentSchemaError } from './errors/DivergentSchemaError';
-import { ServiceUnavailableError } from './errors/ServiceUnavailableError';
+import { BadRequestError } from '../errors/BadRequestError';
+import { DivergentSchemaError } from '../errors/DivergentSchemaError';
+import { ServiceUnavailableError } from '../errors/ServiceUnavailableError';
 import { LogService } from './logService';
-import { OrdersApi } from './ordersApi';
-import { Product, ProductsApi } from './productsApi';
-import { ShopifyApi, ShopifyOrder } from './shopifyApi';
+import { OrdersApi } from '../externalServices/ordersApi';
+import { Product, ProductsApi } from '../externalServices/productsApi';
+import { ShopifyApi, ShopifyOrder } from '../externalServices/shopifyApi';
 import { SyncDataService } from './syncDataService';
 
-export class SyncOrderService {
+export class SyncOrdersService {
   constructor(
     private readonly ordersApi: OrdersApi,
     private readonly productsApi: ProductsApi,
@@ -27,7 +27,7 @@ export class SyncOrderService {
       sinceId: lastOrderId?.toString() ?? '0',
     });
 
-    if (result.status === 'error') {
+    if (result.error) {
       await this.logService.log(
         'error',
         `There was an error while trying to get orders from ShopifyApi: ${result.error}`
@@ -50,7 +50,7 @@ export class SyncOrderService {
         pageInfo: result.data.pageInfo.next,
       });
 
-      if (result.status === 'error') {
+      if (result.error) {
         await this.logService.log(
           'error',
           `There was an error while trying to get orders from ShopifyApi: ${result.error}`
@@ -84,7 +84,7 @@ export class SyncOrderService {
       productsShopifyIds
     );
 
-    if (productsApiResponse.status === 'error') {
+    if (productsApiResponse.error) {
       await this.logService.log('error', productsApiResponse.error.message);
 
       return;
@@ -114,7 +114,7 @@ export class SyncOrderService {
         description: '',
       });
 
-      if (result.status === 'error') {
+      if (result.error) {
         await this.logService.log(
           'error',
           `Couldn't create product with ShopifyId ${product.id} that is required for the order with shopifyId ${order.id} so the creation of the order was aborted. ${result.error}`

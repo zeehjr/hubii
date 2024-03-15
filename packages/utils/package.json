@@ -1,0 +1,5 @@
+{
+  "name": "utils",
+  "main": "src/index.ts",
+  "scripts": {}
+}

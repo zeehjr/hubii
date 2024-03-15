@@ -1,12 +1,12 @@
 import { PrismaClient } from '../prisma/client';
-import { OrdersApi } from './ordersApi';
-import { ProductsApi } from './productsApi';
-import { ShopifyApi } from './shopifyApi';
-import { SyncDataService } from './syncDataService';
-import { SyncOrderService } from './syncOrderService';
-import { LogService } from './logService';
+import { OrdersApi } from './externalServices/ordersApi';
+import { ProductsApi } from './externalServices/productsApi';
+import { ShopifyApi } from './externalServices/shopifyApi';
+import { SyncDataService } from './services/syncDataService';
+import { SyncOrdersService } from './services/syncOrdersService';
+import { LogService } from './services/logService';
 import { getEnvironmentVariables } from './config';
-import { waitForService } from './waitForService';
+import { waitForService } from './utils/waitForService';
 
 const env = getEnvironmentVariables();
 
@@ -47,7 +47,7 @@ const productsApi = new ProductsApi(env.data.PRODUCTS_SERVICE_URL);
 const syncDataService = new SyncDataService(prisma);
 const logService = new LogService(prisma);
 
-const syncOrderService = new SyncOrderService(
+const syncOrderService = new SyncOrdersService(
   ordersApi,
   productsApi,
   shopifyApi,

@@ -27,6 +27,7 @@
   "dependencies": {
     "@prisma/client": "^5.11.0",
     "axios": "^1.6.7",
+    "utils": "workspace:*",
     "zod": "^3.22.4"
   }
 }
