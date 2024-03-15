@@ -40,7 +40,7 @@ const prisma = new PrismaClient();
 const shopifyApi = new ShopifyApi({
   accessToken: env.data.SHOPIFY_ACCESS_TOKEN,
   storeDomain: env.data.SHOPIFY_STORE_DOMAIN,
-  itemsPerPage: 1,
+  itemsPerPage: 250,
 });
 const ordersApi = new OrdersApi(env.data.ORDERS_SERVICE_URL);
 const productsApi = new ProductsApi(env.data.PRODUCTS_SERVICE_URL);

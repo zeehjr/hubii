@@ -23,7 +23,8 @@ export class SyncOrderService {
 
     let result = await this.shopifyApi.getOrders({
       status: 'closed',
-      sinceId: lastOrderId?.toString() ?? undefined,
+      // Apparently, when using sinceId is comes ordered by ID asc, that is exactly what we want
+      sinceId: lastOrderId?.toString() ?? '0',
     });
 
     if (result.status === 'error') {
@@ -46,7 +47,6 @@ export class SyncOrderService {
     while (result.data.pageInfo.next) {
       result = await this.shopifyApi.getOrders({
         status: 'closed',
-        sinceId: lastOrderId?.toString() ?? undefined,
         pageInfo: result.data.pageInfo.next,
       });
 
