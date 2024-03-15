@@ -3,7 +3,8 @@ import { anyObject, mockDeep, mockReset } from 'jest-mock-extended';
 import { ProductsService } from '../../src/services/productsService';
 
 const productMock = {
-  id: '1',
+  id: 1,
+  shopifyId: null,
   title: '1',
   description: '1',
   price: new Prisma.Decimal(10),
@@ -22,7 +23,7 @@ describe('ProductsService', () => {
       const result = await productsService.create({
         title: productMock.title,
         description: productMock.description,
-        price: productMock.price.toNumber(),
+        price: productMock.price.toString(),
       });
 
       expect(result).toBeDefined();
@@ -33,7 +34,7 @@ describe('ProductsService', () => {
   describe('ProductsService.list', () => {
     test('should return the products returned from database', async () => {
       prismaMock.product.findMany.calledWith().mockResolvedValue([productMock]);
-      const result = await productsService.list([]);
+      const result = await productsService.list([], 'none');
 
       expect(result).toBeDefined();
       expect(result).toHaveLength(1);
@@ -47,7 +48,7 @@ describe('ProductsService', () => {
         .calledWith(anyObject())
         .mockResolvedValue([productMock]);
 
-      const result = await productsService.list(ids);
+      const result = await productsService.list(ids, 'ids');
 
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {
@@ -78,7 +79,7 @@ describe('ProductsService', () => {
       const updateInput = {
         title: 'new title',
         description: oldProduct.description,
-        price: oldProduct.price.toNumber(),
+        price: oldProduct.price.toString(),
       };
 
       const result = await productsService.update(oldProduct.id, updateInput);
