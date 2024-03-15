@@ -53,7 +53,7 @@ describe('ProductsService', () => {
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {
           id: {
-            in: ids,
+            in: ids.map(Number),
           },
         },
       });
